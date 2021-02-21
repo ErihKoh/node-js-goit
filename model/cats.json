@@ -1,0 +1,16 @@
+{
+  "cats": [
+    {
+      "id": "1a80a959-0c8a-40d0-9958-bbc12d2c9665",
+      "name": "Bars",
+      "age": 3,
+      "isVaccinated": true
+    },
+    {
+      "id": "6808d8e1-2e32-4ec9-bc13-c9c2a19ddf3a",
+      "name": "Son",
+      "age": 2,
+      "isVaccinated": false
+    }
+  ]
+}
