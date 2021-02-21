@@ -1,133 +1,133 @@
-const express = require("express");
-const router = express.Router();
+const express = require('express')
+const router = express.Router()
 
-const Cats = require("../../model/cats");
-const validate = require("./validation");
+const Cats = require('../../model/cats')
+const validate = require('./validation')
 
-router.get("/", async (req, res, next) => {
+router.get('/', async (req, res, next) => {
   try {
-    const cats = await Cats.getAll();
+    const cats = await Cats.getAll()
     res.json({
-      status: "succes",
+      status: 'succes',
       code: 200,
       data: {
         cats,
       },
-    });
+    })
   } catch (e) {
-    next(e);
+    next(e)
   }
-});
+})
 
-router.get("/:id", async (req, res, next) => {
+router.get('/:id', async (req, res, next) => {
   try {
-    const cat = await Cats.getById(req.params.id);
+    const cat = await Cats.getById(req.params.id)
     if (cat) {
       return res.json({
-        status: "succes",
+        status: 'succes',
         code: 200,
         data: {
           cat,
         },
-      });
+      })
     } else {
       res.status(404).json({
-        status: "error",
+        status: 'error',
         code: 404,
-        data: "Not found",
-      });
+        data: 'Not found',
+      })
     }
   } catch (e) {
-    next(e);
+    next(e)
   }
-});
+})
 
-router.post("/", validate.createCat, async (req, res, next) => {
+router.post('/', validate.createCat, async (req, res, next) => {
   try {
-    const cat = await Cats.create(req.body);
+    const cat = await Cats.create(req.body)
     res.status(201).json({
-      status: "success",
+      status: 'success',
       code: 201,
       data: {
         cat,
       },
-    });
+    })
   } catch (e) {
-    next(e);
+    next(e)
   }
-});
+})
 
-router.delete("/:id", async (req, res, next) => {
+router.delete('/:id', async (req, res, next) => {
   try {
-    const cat = await Cats.remove(req.params.id);
+    const cat = await Cats.remove(req.params.id)
     if (cat) {
       return res.json({
-        status: "success",
+        status: 'success',
         code: 200,
         data: {
           cat,
         },
-      });
+      })
     } else {
       res.status(404).json({
-        status: "error",
+        status: 'error',
         code: 404,
-        data: "Not found",
-      });
+        data: 'Not found',
+      })
     }
   } catch (e) {
-    next(e);
+    next(e)
   }
-});
+})
 
-router.put("/:id", validate.updateCat, async (req, res, next) => {
+router.put('/:id', validate.updateCat, async (req, res, next) => {
   try {
-    const cat = await Cats.update(req.params.id, req.body);
+    const cat = await Cats.update(req.params.id, req.body)
     if (cat) {
       return res.json({
-        status: "success",
+        status: 'success',
         code: 200,
         data: {
           cat,
         },
-      });
+      })
     } else {
       res.status(404).json({
-        status: "error",
+        status: 'error',
         code: 404,
-        data: "Not found",
-      });
+        data: 'Not found',
+      })
     }
   } catch (e) {
-    next(e);
+    next(e)
   }
-});
+})
 
 router.patch(
-  "/:id/vaccinated",
+  '/:id/vaccinated',
   validate.updateStatusCat,
   async (req, res, next) => {
     try {
-      const cat = await Cats.update(req.params.id, req.body);
+      const cat = await Cats.update(req.params.id, req.body)
       if (cat) {
         return res.json({
-          status: "success",
+          status: 'success',
           code: 200,
           data: {
             cat,
           },
-        });
+        })
       } else {
         res.status(404).json({
-          status: "error",
+          status: 'error',
           code: 404,
-          data: "Not found",
-        });
+          data: 'Not found',
+        })
       }
     } catch (e) {
-      next(e);
+      next(e)
     }
   }
-);
+)
 
-module.exports = router;
+module.exports = router
