@@ -6,7 +6,7 @@ const create = async (body) => {
 };
 
 const update = async (id, body) => {
-  const { value: result } = await Cat.findByIdAndUpdate(
+  const result = await Cat.findByIdAndUpdate(
     { _id: id },
     { ...body },
     { new: true }
@@ -20,7 +20,7 @@ const getAll = async () => {
 };
 
 const getById = async (id) => {
-  const result = await Cat.find({ _id: id });
+  const result = await Cat.findOne({ _id: id });
   return result;
 };
 

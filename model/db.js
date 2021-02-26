@@ -9,15 +9,15 @@ const db = mongoose.connect(uriDb, {
   useFindAndModify: false,
 });
 
-mongoose.connect.on("connected", () => {
+mongoose.connection.on("connected", () => {
   console.log("Mongoose connection on db");
 });
 
-mongoose.connect.on("error", (err) => {
+mongoose.connection.on("error", (err) => {
   console.log(`Mongoose connection error: ${err.message}`);
 });
 
-mongoose.connect.on("disconnected", () => {
+mongoose.connection.on("disconnected", () => {
   console.log("Mongoose disconnected");
 });
 
