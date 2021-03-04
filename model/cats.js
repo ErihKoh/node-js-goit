@@ -5,27 +5,33 @@ const create = async (body) => {
   return result;
 };
 
-const update = async (id, body) => {
+const update = async (id, body, userId) => {
   const result = await Cat.findByIdAndUpdate(
-    { _id: id },
+    { _id: id, owner: userId },
     { ...body },
     { new: true }
   );
   return result;
 };
 
-const getAll = async () => {
-  const results = await Cat.find({});
+const getAll = async (userId) => {
+  const results = await Cat.find({ owner: userId }).populate({
+    path: "owner",
+    select: "name email sex -_id",
+  });
   return results;
 };
 
-const getById = async (id) => {
-  const result = await Cat.findOne({ _id: id });
+const getById = async (id, userId) => {
+  const result = await Cat.findOne({ _id: id, owner: userId }).populate({
+    path: "owner",
+    select: "name email sex -_id",
+  });
   return result;
 };
 
-const remove = async (id) => {
-  const result = await Cat.findByIdAndDelete({ _id: id });
+const remove = async (id, userId) => {
+  const result = await Cat.findByIdAndDelete({ _id: id, owner: userId });
   return result;
 };
 
