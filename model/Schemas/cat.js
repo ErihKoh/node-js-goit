@@ -1,5 +1,4 @@
-const mongoose = require("mongoose");
-const { Schema, model } = mongoose;
+const { Schema, model, SchemaTypes } = require("mongoose");
 
 const catSchema = new Schema(
   {
@@ -23,9 +22,8 @@ const catSchema = new Schema(
     },
     //   date: { type: Date, default: () => Date.now },
     owner: {
-      name: String,
-      age: Number,
-      address: String,
+      type: SchemaTypes.ObjectId,
+      ref: "user",
     },
   },
   { versionKey: false, timestamps: true }

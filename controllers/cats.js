@@ -1,11 +1,13 @@
 const Cats = require("../model/cats");
+const { HttpCode } = require("../helpers/constants");
 
 const getAll = async (req, res, next) => {
   try {
-    const cats = await Cats.getAll();
+    const userId = await req.user.id;
+    const cats = await Cats.getAll(userId);
     return res.json({
       status: "success",
-      code: 200,
+      code: HttpCode.OK,
       data: {
         cats,
       },
@@ -17,11 +19,12 @@ const getAll = async (req, res, next) => {
 
 const getById = async (req, res, next) => {
   try {
-    const cat = await Cats.getById(req.params.id);
+    const userId = await req.user.id;
+    const cat = await Cats.getById(req.params.id, userId);
     if (cat) {
       return res.json({
         status: "success",
-        code: 200,
+        code: HttpCode.OK,
         data: {
           cat,
         },
@@ -40,10 +43,11 @@ const getById = async (req, res, next) => {
 
 const create = async (req, res, next) => {
   try {
-    const cat = await Cats.create(req.body);
+    const userId = await req.user.id;
+    const cat = await Cats.create({ ...req.body, owner: userId });
     return res.status(201).json({
       status: "success",
-      code: 201,
+      code: HttpCode.CREATED,
       data: {
         cat,
       },
@@ -55,11 +59,12 @@ const create = async (req, res, next) => {
 
 const remove = async (req, res, next) => {
   try {
-    const cat = await Cats.remove(req.params.id);
+    const userId = await req.user.id;
+    const cat = await Cats.remove(req.params.id, userId);
     if (cat) {
       return res.json({
         status: "success",
-        code: 200,
+        code: HttpCode.OK,
         data: {
           cat,
         },
@@ -78,11 +83,12 @@ const remove = async (req, res, next) => {
 
 const update = async (req, res, next) => {
   try {
-    const cat = await Cats.update(req.params.id, req.body);
+    const userId = await req.user.id;
+    const cat = await Cats.update(req.params.id, req.body, userId);
     if (cat) {
       return res.json({
         status: "success",
-        code: 200,
+        code: HttpCode.OK,
         data: {
           cat,
         },
@@ -101,11 +107,12 @@ const update = async (req, res, next) => {
 
 const updateStatus = async (req, res, next) => {
   try {
-    const cat = await Cats.update(req.params.id, req.body);
+    const userId = await req.user.id;
+    const cat = await Cats.update(req.params.id, req.body, userId);
     if (cat) {
       return res.json({
         status: "success",
-        code: 200,
+        code: HttpCode.OK,
         data: {
           cat,
         },
