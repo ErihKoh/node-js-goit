@@ -6,7 +6,7 @@ const create = async (body) => {
 };
 
 const update = async (id, body, userId) => {
-  const result = await Cat.findByIdAndUpdate(
+  const result = await Cat.findOneAndUpdate(
     { _id: id, owner: userId },
     { ...body },
     { new: true }
@@ -14,12 +14,29 @@ const update = async (id, body, userId) => {
   return result;
 };
 
-const getAll = async (userId) => {
-  const results = await Cat.find({ owner: userId }).populate({
-    path: "owner",
-    select: "name email sex -_id",
-  });
-  return results;
+const getAll = async (
+  userId,
+  { sortBy, sortByDesc, filter, limit = "5", offset = "0" }
+) => {
+  const results = await Cat.paginate(
+    { owner: userId },
+    {
+      limit,
+      offset,
+      sort: {
+        ...(sortBy ? { [`${sortBy}`]: 1 } : {}),
+        ...(sortByDesc ? { [`${sortByDesc}`]: -1 } : {}),
+      },
+      select: filter ? filter.split("|").join(" ") : "",
+      populate: {
+        path: "owner",
+        select: "name email sex -_id",
+      },
+    }
+  );
+  const { docs: cats, totalDocs: total } = results;
+
+  return { total: total.toString(), limit, offset, cats };
 };
 
 const getById = async (id, userId) => {
@@ -31,7 +48,7 @@ const getById = async (id, userId) => {
 };
 
 const remove = async (id, userId) => {
-  const result = await Cat.findByIdAndDelete({ _id: id, owner: userId });
+  const result = await Cat.findOneAndDelete({ _id: id, owner: userId });
   return result;
 };
 
