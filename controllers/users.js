@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
-const Users = require("../model/users");
+const bcrypt = require("bcryptjs");
+const { User: Users, Gender } = require("../models");
 const { HttpCode } = require("../helpers/constants");
 
 require("dotenv").config();
@@ -7,8 +8,8 @@ const SECRET_WORD = process.env.JWT_SECRET;
 
 const reg = async (req, res, next) => {
   try {
-    const { email } = req.body;
-    const user = await Users.findByEmail(email);
+    const { name, email, password, sex = "none" } = req.body;
+    const user = await Users.findOne({ where: { email } });
     if (user) {
       return res.status(HttpCode.CONFLICT).json({
         status: "error",
@@ -17,7 +18,13 @@ const reg = async (req, res, next) => {
         message: "Email is already use",
       });
     }
-    const newUser = await Users.create(req.body);
+    const gender = await Gender.findOne({ where: { name: sex } });
+    const newUser = await Users.create({
+      name,
+      email,
+      password: await bcrypt.hash(password, bcrypt.genSaltSync(10), null),
+      sex: gender.id,
+    });
     return res.status(HttpCode.CREATED).json({
       status: "success",
       code: HttpCode.CREATED,
@@ -35,8 +42,8 @@ const reg = async (req, res, next) => {
 const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    const user = await Users.findByEmail(email);
-    const isValidPassword = await user.validPassword(password);
+    const user = await Users.findOne({ where: { email } });
+    const isValidPassword = await bcrypt.compare(password, user.password);
     if (!user || !isValidPassword) {
       return res.status(HttpCode.UNAUTHORIZED).json({
         status: "error",
@@ -45,10 +52,11 @@ const login = async (req, res, next) => {
         message: "Invalid credentials",
       });
     }
-    const id = user._id;
+    const id = user.id;
     const payload = { id };
     const token = jwt.sign(payload, SECRET_WORD, { expiresIn: "2h" });
-    await Users.updateToken(id, token);
+    user.token = token;
+    await user.save();
 
     return res.status(HttpCode.OK).json({
       status: "success",
@@ -63,8 +71,8 @@ const login = async (req, res, next) => {
 };
 
 const logout = async (req, res, next) => {
-  const userId = req.user.id;
-  await Users.updateToken(userId, null);
+  const id = req.user.id;
+  await Users.update({ token: null }, { where: { id } });
   return res.status(HttpCode.NO_CONTENT).json({ message: "Nothing" });
 };
 

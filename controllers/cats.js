@@ -1,10 +1,10 @@
-const Cats = require("../model/cats");
+const Cats = require("../models").Cat;
 const { HttpCode } = require("../helpers/constants");
 
 const getAll = async (req, res, next) => {
   try {
     const userId = await req.user.id;
-    const cats = await Cats.getAll(userId, req.query);
+    const cats = await Cats.findAll({ where: { owner: userId } });
     return res.json({
       status: "success",
       code: HttpCode.OK,
@@ -20,7 +20,9 @@ const getAll = async (req, res, next) => {
 const getById = async (req, res, next) => {
   try {
     const userId = await req.user.id;
-    const cat = await Cats.getById(req.params.id, userId);
+    const cat = await Cats.findOne({
+      where: { id: req.params.id, owner: userId },
+    });
     if (cat) {
       return res.json({
         status: "success",
@@ -60,8 +62,13 @@ const create = async (req, res, next) => {
 const remove = async (req, res, next) => {
   try {
     const userId = await req.user.id;
-    const cat = await Cats.remove(req.params.id, userId);
+    const cat = await Cats.findOne({
+      where: { id: req.params.id, owner: userId },
+    });
     if (cat) {
+      await Cats.destroy({
+        where: { id: req.params.id, owner: userId },
+      });
       return res.json({
         status: "success",
         code: HttpCode.OK,
@@ -84,7 +91,12 @@ const remove = async (req, res, next) => {
 const update = async (req, res, next) => {
   try {
     const userId = await req.user.id;
-    const cat = await Cats.update(req.params.id, req.body, userId);
+    await Cats.update(req.body, {
+      where: { id: req.params.id, owner: userId },
+    });
+    const cat = await Cats.findOne({
+      where: { id: req.params.id, owner: userId },
+    });
     if (cat) {
       return res.json({
         status: "success",
@@ -108,7 +120,12 @@ const update = async (req, res, next) => {
 const updateStatus = async (req, res, next) => {
   try {
     const userId = await req.user.id;
-    const cat = await Cats.update(req.params.id, req.body, userId);
+    await Cats.update(req.body, {
+      where: { id: req.params.id, owner: userId },
+    });
+    const cat = await Cats.findOne({
+      where: { id: req.params.id, owner: userId },
+    });
     if (cat) {
       return res.json({
         status: "success",
