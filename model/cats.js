@@ -16,17 +16,18 @@ const update = async (id, body, userId) => {
 
 const getAll = async (
   userId,
-  sortBy,
-  sortByDecs,
-  filter,
-  limit = "5",
-  offset = "0"
+  { sortBy, sortByDesc, filter, limit = "5", offset = "0" }
 ) => {
   const results = await Cat.paginate(
     { owner: userId },
     {
       limit,
       offset,
+      sort: {
+        ...(sortBy ? { [`${sortBy}`]: 1 } : {}),
+        ...(sortByDesc ? { [`${sortByDesc}`]: -1 } : {}),
+      },
+      select: filter ? filter.split("|").join(" ") : "",
       populate: {
         path: "owner",
         select: "name email sex -_id",

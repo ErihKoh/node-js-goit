@@ -4,7 +4,7 @@ const { HttpCode } = require("../helpers/constants");
 const getAll = async (req, res, next) => {
   try {
     const userId = await req.user.id;
-    const cats = await Cats.getAll(userId, req.quire);
+    const cats = await Cats.getAll(userId, req.query);
     return res.json({
       status: "success",
       code: HttpCode.OK,
