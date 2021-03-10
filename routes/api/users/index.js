@@ -4,6 +4,7 @@ const validate = require("./validation");
 const userController = require("../../../controllers/users");
 const guard = require("../../../helpers/guard");
 const { createAccountLimiter } = require("../../../helpers/rate-limit-req");
+const upload = require("../../../helpers/upload");
 
 router.post(
   "/registration",
@@ -13,5 +14,12 @@ router.post(
 );
 router.post("/login", validate.loginUser, userController.login);
 router.post("/logout", guard, userController.logout);
+router.patch(
+  "/avatar",
+  guard,
+  upload.single("avatar"),
+  validate.validateUploadAvatar,
+  userController.avatars
+);
 
 module.exports = router;

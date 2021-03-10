@@ -9,9 +9,13 @@ router
   .post("/", guard, validate.createCat, catsController.create);
 
 router
-  .get("/:id", guard, catsController.getById)
-  .delete("/:id", guard, catsController.remove)
-  .put("/:id", guard, validate.updateCat, catsController.update);
+  .get("/:id", guard, validate.idCat, catsController.getById)
+  .delete("/:id", guard, validate.idCat, catsController.remove)
+  .put(
+    "/:id",
+    [guard, validate.idCat, validate.updateCat],
+    catsController.update
+  );
 
 router.patch(
   "/:id/vaccinated",
