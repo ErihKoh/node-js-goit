@@ -32,7 +32,7 @@ describe("Testing the route api/cats", () => {
       expect(res.status).toEqual(200);
       expect(res.body).toBeDefined();
       expect(res.body.data.cat).toHaveProperty("_id");
-      // expect(res.body.cat.id).toBe(cat._id);
+      expect(res.body.data.cat._id).toBe(cat._id);
       done();
     });
   });
