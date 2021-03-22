@@ -13,6 +13,7 @@ jest.mock("../model/cats.js");
 jest.mock("../model/users.js");
 
 describe("Testing the route api/cats", () => {
+  let idNewCat;
   describe("should handle get request", () => {
     it("should return 200 status for get all cats", async (done) => {
       const res = await request(app)
@@ -47,7 +48,6 @@ describe("Testing the route api/cats", () => {
     });
   });
   describe("should handle post request", () => {
-    let idNewCat = null;
     it("should return 201 status create cat", async (done) => {
       const res = await request(app)
         .post("/api/cats")
@@ -97,7 +97,45 @@ describe("Testing the route api/cats", () => {
     });
   });
 
-  describe("should handle put request", () => {});
+  describe("should handle put request", () => {
+    it("should return 200 status update cat", async (done) => {
+      const res = await request(app)
+        .put(`/api/cats/${idNewCat}`)
+        .set("Authorization", `Bearer ${token}`)
+        .send({ name: "Boris" })
+        .set("Accept", "application/json");
+
+      expect(res.status).toEqual(200);
+      expect(res.body).toBeDefined();
+      expect(res.body.data.cat.name).toBe("Boris");
+
+      done();
+    });
+    it("should return 400 status for wrang field", async (done) => {
+      const res = await request(app)
+        .put(`/api/cats/${idNewCat}`)
+        .set("Authorization", `Bearer ${token}`)
+        .send({ test: 1 })
+        .set("Accept", "application/json");
+
+      expect(res.status).toEqual(400);
+      expect(res.body).toBeDefined();
+
+      done();
+    });
+    it("should return 404 status whith wrong id ", async (done) => {
+      const res = await request(app)
+        .put(`/api/cats/123456`)
+        .set("Authorization", `Bearer ${token}`)
+        .send({ name: "Simon" })
+        .set("Accept", "application/json");
+
+      expect(res.status).toEqual(404);
+      expect(res.body).toBeDefined();
+
+      done();
+    });
+  });
   describe("should handle patch request", () => {});
   describe("should handle delete request", () => {});
 });

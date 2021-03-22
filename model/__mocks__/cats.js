@@ -8,10 +8,10 @@ const create = jest.fn((body) => {
 });
 
 const update = jest.fn((id, body, userId) => {
-  const [cat] = cats.filter((el) => String(el._id) === String(id));
+  let [cat] = cats.filter((el) => String(el._id) === String(id));
 
   if (cat) {
-    cat = { ...cat, body };
+    cat = { ...cat, ...body };
   }
   return cat;
 });
