@@ -112,5 +112,5 @@ const saveAvatarToStatic = async (req) => {
   }
   return avatarUrl;
 };
-
+// 1111
 module.exports = { reg, login, logout, avatars };
