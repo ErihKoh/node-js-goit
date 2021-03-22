@@ -130,13 +130,13 @@ const avatars = async (req, res, next) => {
 const saveAvatarToCloud = async (req) => {
   const pathFile = req.file.path;
   const result = await uploadCloud(pathFile, {
-    // public_id: req.user.imgIdCloud?.replace("Photo/", ""),
+    public_id: req.user.imgIdCloud?.replace("Photo/", ""),
     folder: "Photo",
     transformation: { width: 250, height: 250, crop: "fill" },
   });
-  cloudinary.uploader.destroy(req.user.imgIdCloud, (err, result) => {
-    console.log(err, result);
-  });
+  // cloudinary.uploader.destroy(req.user.imgIdCloud, (err, result) => {
+  //   console.log(err, result);
+  // });
   try {
     await fs.unlink(pathFile);
   } catch (e) {
