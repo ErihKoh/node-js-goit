@@ -58,11 +58,7 @@ class EmailService {
       subject: "Confirmation of registration",
       html: emailBody,
     };
-    const responce = await this.#sender.send(msg);
-    console.log(
-      "🚀 ~ file: email.js ~ line 62 ~ EmailService ~ sendEmail ~ responce",
-      responce
-    );
+    await this.#sender.send(msg);
   }
 }
 
