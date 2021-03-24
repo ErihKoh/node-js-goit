@@ -15,7 +15,7 @@ jest.mock("../model/users.js");
 jest.mock("cloudinary");
 
 describe("Testing the route api/users", () => {
-  it("should return 201 status registration", async (done) => {
+  it("should return 201 status registration", async () => {
     const res = await request(app)
       .post("/api/users/registration")
       .send(newUser)
@@ -23,10 +23,9 @@ describe("Testing the route api/users", () => {
 
     expect(res.status).toEqual(201);
     expect(res.body).toBeDefined();
-    done();
   });
 
-  it("should return 409 status registration - email already used", async (done) => {
+  it("should return 409 status registration - email already used", async () => {
     const res = await request(app)
       .post("/api/users/registration")
       .send(newUser)
@@ -34,9 +33,8 @@ describe("Testing the route api/users", () => {
 
     expect(res.status).toEqual(409);
     expect(res.body).toBeDefined();
-    done();
   });
-  it("should return 200 status login", async (done) => {
+  it("should return 200 status login", async () => {
     const res = await request(app)
       .post("/api/users/login")
       .send(newUser)
@@ -44,10 +42,9 @@ describe("Testing the route api/users", () => {
 
     expect(res.status).toEqual(200);
     expect(res.body).toBeDefined();
-    done();
   });
 
-  it("should return 401 status login", async (done) => {
+  it("should return 401 status login", async () => {
     const res = await request(app)
       .post("/api/users/login")
       .send({ email: "fake@test.com", password: "123456" })
@@ -55,10 +52,9 @@ describe("Testing the route api/users", () => {
 
     expect(res.status).toEqual(401);
     expect(res.body).toBeDefined();
-    done();
   });
 
-  it("should return 200 status upload avatar", async (done) => {
+  it("should return 200 status upload avatar", async () => {
     const buffer = await fs.readFile("./test/tree.jpg");
     const res = await request(app)
       .patch("/api/users/avatar")
@@ -67,6 +63,5 @@ describe("Testing the route api/users", () => {
     console.log(res.body);
     expect(res.status).toEqual(200);
     expect(res.body).toBeDefined();
-    done();
   });
 });

@@ -2,7 +2,6 @@ const { Schema, model } = require("mongoose");
 const bcrypt = require("bcryptjs");
 const gravatar = require("gravatar");
 const { Sex } = require("../../helpers/constants");
-const { verify } = require("jsonwebtoken");
 const SALT_WORK_FACTOR = 8;
 
 const userSchema = new Schema(
